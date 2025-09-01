@@ -18,33 +18,47 @@ namespace HospitalManagement
     {
         static void Main(string[] args)
         {
+            bool successLogin = false;
 
-            Console.Write("ID: ");
-            string id = Console.ReadLine();
-            int numID = Convert.ToInt32(id);
-
-            Console.Write("Password: ");
-            string password = Console.ReadLine();
-
-            try
-            {            
-                string[] lines = File.ReadAllLines("C:\\Users\\invic\\source\\repos\\HospitalManagement\\Accounts.txt");
-
-                foreach (string name in lines)
+            while (successLogin != true)
+            {
+                try
                 {
-                    char delimiter = ',';
-                    string[] parts = name.Split(delimiter);
-                    Console.WriteLine($"UserName: {parts[0]}, Password: {parts[1]}");
+                    string[] lines = File.ReadAllLines("Accounts.txt");
+
+                    Console.Write("ID: ");
+                    int id = Convert.ToInt32(Console.ReadLine());
+
+                    Console.Write("Password: ");
+                    string password = Console.ReadLine();
+
+                    foreach (string name in lines)
+                    {
+                        char delimiter = ',';
+                        string[] parts = name.Split(delimiter);
+                        if (Convert.ToInt32(parts[0]) == id && password == parts[1])
+                        {
+                            Console.WriteLine("Valid credentials");
+                            successLogin = true;
+                            break;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Try again mate");
+                            break;
+                        }
+                    }
+                }
+
+
+                catch (Exception ex)
+                {
+                    {
+                        Console.WriteLine($"File not found: {ex}");
+                    }
+
                 }
             }
-
-            catch (Exception ex)
-            {
-                {
-                    Console.WriteLine($"File not found: {ex}");
-                }
-
             }
         }
-    }
 }
