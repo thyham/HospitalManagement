@@ -14,51 +14,43 @@ Write appropriate exception handling code to handle exceptions which might occur
 
 namespace HospitalManagement
 {
-    class Program2
+    class Program
     {
         static void Main(string[] args)
         {
+
+            EmployeeList myEmployees = new EmployeeList();
+
+            try
+            {
+                myEmployees.LoadEmployees("emp.txt");
+            }
+            catch (FileNotFoundException)
+            {
+                Console.WriteLine("File not found");
+                return;
+            }
+
             bool successLogin = false;
 
-            while (successLogin != true)
+                Console.Write("ID: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+
+            if (myEmployees.ReturnEmployees(id))
             {
-                try
-                {
-                    string[] lines = File.ReadAllLines("Accounts.txt");
+                Console.WriteLine("Valid");
+                successLogin = true;
 
-                    Console.Write("ID: ");
-                    int id = Convert.ToInt32(Console.ReadLine());
-
-                    Console.Write("Password: ");
-                    string password = Console.ReadLine();
-
-                    foreach (string name in lines)
-                    {
-                        char delimiter = ',';
-                        string[] parts = name.Split(delimiter);
-                        if (Convert.ToInt32(parts[0]) == id && password == parts[1])
-                        {
-                            Console.WriteLine("Valid credentials");
-                            successLogin = true;
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Try again mate");
-                            break;
-                        }
-                    }
-                }
-
-
-                catch (Exception ex)
-                {
-                    {
-                        Console.WriteLine($"File not found: {ex}");
-                    }
-
-                }
             }
-            }
+            //// Display the employee details 
+            myEmployees.PrintEmployees();
+
+            // Sort the employee detail and display again.
+            myEmployees.SortEmployees();
+            Console.WriteLine("\n After Sorting:");
+            myEmployees.PrintEmployees();
+
+            Console.ReadKey();
         }
+    }
 }
