@@ -20,6 +20,8 @@ namespace HospitalManagement
         {
 
             EmployeeList myEmployees = new EmployeeList();
+            int id;
+            string password;
 
             try
             {
@@ -33,17 +35,32 @@ namespace HospitalManagement
 
             bool successLogin = false;
 
-                Console.Write("ID: ");
-                int id = Convert.ToInt32(Console.ReadLine());
-
-            if (myEmployees.ReturnEmployees(id))
+            while (!successLogin)
             {
-                Console.WriteLine("Valid");
-                successLogin = true;
+                Console.Write("ID: ");
+                id = Convert.ToInt32(Console.ReadLine());
 
+                Console.Write("Password: ");
+                password = Console.ReadLine();
+
+
+                if (myEmployees.ReturnEmployees(id, password))
+                {
+                    Console.WriteLine("Valid");
+                    successLogin = true;
+
+                }
+
+                else
+                {
+                    Console.WriteLine("Invalid");
+                }
             }
-            //// Display the employee details 
-            myEmployees.PrintEmployees();
+
+
+
+                //// Display the employee details 
+                myEmployees.PrintEmployees();
 
             // Sort the employee detail and display again.
             myEmployees.SortEmployees();

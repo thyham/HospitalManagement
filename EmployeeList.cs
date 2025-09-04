@@ -56,12 +56,12 @@ namespace HospitalManagement
 
         }
 
-        public bool ReturnEmployees(int id)
+        public bool ReturnEmployees(int id, string password)
         {
             // prints each employee details in the employees list on a seperate line
             foreach (Employee employee in this.employees)
             {
-                if (employee.EmployeeID == id)
+                if (employee.EmployeeID == id && employee.EmployeePW == password)
                 {
                     return true;
                 }

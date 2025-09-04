@@ -7,7 +7,7 @@ namespace HospitalManagement
     {
         // Write code for the Properties of an Employee
         // Name (First and last name), ID#, hourly rate and total working hours per week
-        private string employeeFName, employeeLName;
+        private string employeeFName, employeeLName, employeePW;
         private double hourlyRate, workHours;
         private int employeeID;
 
@@ -19,6 +19,7 @@ namespace HospitalManagement
             hourlyRate = 0;
             workHours = 0;
             employeeID = 0;
+            employeePW = "";
 
         }
 
@@ -35,6 +36,7 @@ namespace HospitalManagement
             hourlyRate = Convert.ToDouble(contents[2]);
             workHours = Convert.ToDouble(contents[3]);
             employeeID = Convert.ToInt32(contents[4]);
+            employeePW = contents[5];
         }
 
         // Method to calculate the weekly salary of an Employee
@@ -49,7 +51,7 @@ namespace HospitalManagement
         {
 
             //use output statement to output every attribute for each entity 
-            return $"{employeeFName}{employeeLName}, ID#: {employeeID}, Weekly Income: {GetWeeklySal()}";
+            return $"{employeeFName}{employeeLName}, ID#: {employeeID}, Weekly Income: {GetWeeklySal()}, {employeePW}";
         }
 
         // Write code for the Implemention of the CompareTo method 
@@ -73,6 +75,11 @@ namespace HospitalManagement
         public int EmployeeID
         {
             get { return employeeID; }
+        }
+
+        public string EmployeePW
+        {
+            get { return employeePW; }
         }
 
     }
