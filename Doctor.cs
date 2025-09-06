@@ -7,11 +7,23 @@ using System.Threading.Tasks;
 
 namespace HospitalManagement
 {
-    class Doctor
+    class Doctor : User
     {
-        private int docID;
-        private string docName;
-        private string docPhone;
-        private string docAddress;
+        public Doctor (int id, string password)
+            : base (id, password) { }
+        public override void ShowMenu()
+        {
+            bool running = true;
+            while (running)
+            {
+                Console.WriteLine("Doctor Menu");
+                string choice = Console.ReadLine();
+                if (choice == "1")
+                {
+                    Console.WriteLine("Choice 1");
+                }
+                break;
+            }
+        }
     }
 }

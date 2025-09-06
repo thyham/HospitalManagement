@@ -1,16 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
-/*
- The given text file contains 5 set of user IDs and Password. 
- The file stores userID and password in the following format:
-<User>, <password>
-Hello, abc1234
-Admin, admin,
-User, user
-Write a program to read a given text file and print the data about the user Id and password. 
-Write appropriate exception handling code to handle exceptions which might occur while reading the text file.  
- */
-
+using System.Runtime.CompilerServices;
+using System.Security.Principal;
 
 namespace HospitalManagement
 {
@@ -18,56 +10,53 @@ namespace HospitalManagement
     {
         static void Main(string[] args)
         {
+            List<User> users = LoadUsers("emp.txt");
+            User loggedInUser = null;
 
-            EmployeeList myEmployees = new EmployeeList();
-            int id;
-            string password;
-
-            try
+            while (loggedInUser == null)
             {
-                myEmployees.LoadEmployees("emp.txt");
+                Console.Write("Enter ID: ");
+                int id = int.Parse(Console.ReadLine());
+
+                Console.Write("Enter password: ");
+                string password = Console.ReadLine();
+
+                loggedInUser = users
+                    .FirstOrDefault(u => u.ID == id && u.Password == password);
+
+                if (loggedInUser == null)
+                    Console.WriteLine("Try again");
+                }
+                Console.WriteLine("Login Success");
+                loggedInUser.ShowMenu();
             }
-            catch (FileNotFoundException)
-            {
-                Console.WriteLine("File not found");
-                return;
-            }
 
-            bool successLogin = false;
-
-            while (!successLogin)
-            {
-                Console.Write("ID: ");
-                id = Convert.ToInt32(Console.ReadLine());
-
-                Console.Write("Password: ");
-                password = Console.ReadLine();
-
-
-                if (myEmployees.ReturnEmployees(id, password))
+                static List<User> LoadUsers(string filepath)
                 {
-                    Console.WriteLine("Valid");
-                    successLogin = true;
-
+                    // prints each employee details in the employees list on a seperate line
+                    var users = new List<User>();
+                    foreach (var line in File.ReadAllLines(filepath))
+                    {
+                        users.Add(CreateUserPerLine(line));
+                    }
+                    return users;
                 }
 
-                else
+                static User CreateUserPerLine(string line)
                 {
-                    Console.WriteLine("Invalid");
+                    // Split the comma seperated string into fields 
+                    string[] contents = line.Split(',');
+
+                    // Assign values to respective properties/ members
+                    int id = int.Parse(contents[0]);
+                    string password = contents[1];
+                    string role = contents[2];
+
+                    return role switch
+                    {
+                        "Doctor" => new Doctor(id, password),
+                        _ => throw new Exception()
+                    };
                 }
             }
-
-
-
-                //// Display the employee details 
-                myEmployees.PrintEmployees();
-
-            // Sort the employee detail and display again.
-            myEmployees.SortEmployees();
-            Console.WriteLine("\n After Sorting:");
-            myEmployees.PrintEmployees();
-
-            Console.ReadKey();
         }
-    }
-}
