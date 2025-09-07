@@ -55,6 +55,7 @@ namespace HospitalManagement
                     return role switch
                     {
                         "Doctor" => new Doctor(id, password),
+                        "Patient" => new Patient(id, password),
                         _ => throw new Exception()
                     };
                 }

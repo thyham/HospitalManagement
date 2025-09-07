@@ -6,13 +6,25 @@ using System.Threading.Tasks;
 
 namespace HospitalManagement
 {
-    class Patient
+    class Patient : User
     {
-        private int patID;
-        private string patName;
-        private string patAddress;
-        private string patEmail;
-        private int patPhone;
+        public Patient(int id, string password)
+            : base(id, password) { }
+
+        public override void ShowMenu()
+        {
+            bool running = true;
+            while (running)
+            {
+                Console.WriteLine("Patient Menu");
+                string choice = Console.ReadLine();
+                if (choice == "1")
+                {
+                    Console.WriteLine("Choice 1");
+                }
+                break;
+            }
+        }
 
     }
 }
