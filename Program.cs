@@ -27,7 +27,8 @@ namespace HospitalManagement
                 if (loggedInUser == null)
                     Console.WriteLine("Try again");
                 }
-                Console.WriteLine("Login Success");
+                Console.WriteLine("Valid Credentials");
+            Console.Clear();
                 loggedInUser.ShowMenu();
             }
 
