@@ -8,8 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Update="Accounts.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <None Update="emp.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

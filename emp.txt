@@ -1,0 +1,4 @@
+doctor,100,password
+patient,200,password,100
+patient,300,password
+doctor,400,password
