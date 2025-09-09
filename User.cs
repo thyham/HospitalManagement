@@ -8,6 +8,7 @@ namespace HospitalManagement
 {
     abstract class User
     {
+        public string Role { get; set; }
         public int ID { get; set; }
         public string Password { get; set; }
         //public string FName { get; set; }

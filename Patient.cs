@@ -8,8 +8,13 @@ namespace HospitalManagement
 {
     class Patient : User
     {
-        public Patient(int id, string password)
-            : base(id, password) { }
+        private string role;
+        private int? DoctorID;
+        public Patient(int id, string password, int? doctorID = null)
+            : base(id, password) {
+            role = "patient";
+            DoctorID = doctorID;
+        }
 
         public override void ShowMenu()
         {

@@ -6,7 +6,7 @@ using System.Security.Principal;
 
 namespace HospitalManagement
 {
-    class Program
+    class Program //single database file, role in index 0, separate search method depending on the role
     {
         static void Main(string[] args)
         {
@@ -48,15 +48,15 @@ namespace HospitalManagement
                     string[] contents = line.Split(',');
 
                     // Assign values to respective properties/ members
-                    int id = int.Parse(contents[0]);
-                    string password = contents[1];
-                    string role = contents[2];
+                    string role = contents[0];
+                    int id = int.Parse(contents[1]);
+                    string password = contents[2];
 
                     return role switch
                     {
-                        "Doctor" => new Doctor(id, password),
-                        "Patient" => new Patient(id, password),
-                        _ => throw new Exception()
+                        "doctor" => new Doctor(id, password),
+                        "patient" => new Doctor(id, password),
+                        _ => throw new Exception($"Unknown role: {role}")
                     };
                 }
             }

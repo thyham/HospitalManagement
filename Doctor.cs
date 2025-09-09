@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HospitalManagement
 {
@@ -11,11 +13,16 @@ namespace HospitalManagement
     {
         private int doctorID;
         private string doctorPW;
-        public Doctor(int id, string password)
-            : base(id, password) {
+        private string role;
+        int patientID;
+
+        public Doctor(int id, string password) : base(id, password)
+        {
             doctorID = id;
             doctorPW = password;
+            role = "doctor";
         }
+
         public override void ShowMenu()
         {
             bool running = true;
@@ -23,30 +30,50 @@ namespace HospitalManagement
             {
                 Console.WriteLine("Doctor Menu");
                 string choice = Console.ReadLine();
-                if (choice == "1")
-                {
-                    foreach (var line in File.ReadAllLines("patients.txt"))
-                    {
-                        string[] contents = line.Split(',');
-                        int patientID = int.Parse(contents[0]);
-                        string name = contents[1];
-                        string description = contents[2];
-                        Console.WriteLine(patientID + name + description);
-                    }
+
+                if (choice == "1") {
+                    ListDoctorDetails();
                 }
-                break;
+
+                else if (choice == "2")
+                {
+                    ListPatients();
+                }
+
+                else if (choice == "Exit")
+                {
+                    break;
+                }
+                continue;
             }
         }
 
-        public void LoadDoctors(string line)
-        {
-            // Split the comma seperated string into fields 
-            string[] contents = line.Split(',');
 
-            // Assign values to respective properties/ members
-            int id = int.Parse(contents[0]);
-            string password = contents[1];
-            string role = contents[2];
+        public void ListDoctorDetails()
+        {
+            Console.WriteLine(doctorID + doctorPW);
+        }
+
+        public void ListPatients()
+        {
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                string role = contents[0];
+
+                if (role == "patient")
+                {
+                    int id = int.Parse(contents[1]);
+                    string password = contents[2];
+                    int? doctorID = contents.Length > 3 ? int.Parse(contents[3]) : null;
+
+                    if (doctorID == this.doctorID)
+                    {
+                        Console.WriteLine(id);
+                    }
+
+                }
+            }
         }
 
         public int DoctorID
