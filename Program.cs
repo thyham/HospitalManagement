@@ -29,36 +29,37 @@ namespace HospitalManagement
                 }
                 Console.WriteLine("Valid Credentials");
             Console.Clear();
-                loggedInUser.ShowMenu();
+                loggedInUser.ShowMenu(users);
             }
 
-                static List<User> LoadUsers(string filepath)
-                {
-                    // prints each employee details in the employees list on a seperate line
-                    var users = new List<User>();
-                    foreach (var line in File.ReadAllLines(filepath))
-                    {
-                        users.Add(CreateUserPerLine(line));
-                    }
-                    return users;
-                }
-
-                static User CreateUserPerLine(string line)
-                {
-                    // Split the comma seperated string into fields 
-                    string[] contents = line.Split(',');
-
-                    // Assign values to respective properties/ members
-                    string role = contents[0];
-                    int id = int.Parse(contents[1]);
-                    string password = contents[2];
-
-                    return role switch
-                    {
-                        "doctor" => new Doctor(id, password),
-                        "patient" => new Doctor(id, password),
-                        _ => throw new Exception($"Unknown role: {role}")
-                    };
-                }
+        static List<User> LoadUsers(string filepath)
+        {
+            // prints each employee details in the employees list on a seperate line
+            var users = new List<User>();
+            foreach (var line in File.ReadAllLines(filepath))
+            {
+                users.Add(CreateUserPerLine(line));
             }
+            return users;
+        }
+
+        static User CreateUserPerLine(string line)
+        {
+            // Split the comma seperated string into fields 
+            string[] contents = line.Split(',');
+
+            // Assign values to respective properties/ members
+            string role = contents[0];
+            int id = int.Parse(contents[1]);
+            string password = contents[2];
+
+            return role switch
+            {
+                "doctor" => new Doctor(id, password),
+                "patient" => new Patient(id, password, contents.Length > 3 ? int.Parse(contents[3]) : (int?)null),
+                _ => throw new Exception($"Unknown role: {role}")
+            };
+        }
+
+    }
         }

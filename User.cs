@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HospitalManagement
 {
-    abstract class User
+    public abstract class User
     {
         public string Role { get; set; }
         public int ID { get; set; }
@@ -35,6 +35,7 @@ namespace HospitalManagement
             //State = state;
         }
 
-        public abstract void ShowMenu();
+
+        public abstract void ShowMenu(List<User> allUsers);
     }
 }

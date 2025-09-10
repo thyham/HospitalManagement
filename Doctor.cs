@@ -23,7 +23,7 @@ namespace HospitalManagement
             role = "doctor";
         }
 
-        public override void ShowMenu()
+        public override void ShowMenu(List<User> allUsers)
         {
             Console.WriteLine("Doctor Menu: " + doctorID);
             Console.WriteLine("Please choose an option: ");
@@ -45,9 +45,10 @@ namespace HospitalManagement
 
                 else if (choice == "3")
                 {
-                    var ap = new Appointment(doctorID, 15, "cc");
-                    Console.WriteLine(ap);
-                    File.AppendAllLines("appointments.txt", new[] { ap.ToString()});
+                    //Console.WriteLine("Enter Description: ");
+                    var ap = new Appointment(4, 28, "description");
+                    File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
+                    ListAppointments();
                 }
 
                 else if (choice == "4")
@@ -104,6 +105,23 @@ namespace HospitalManagement
             }
         }
 
+        public void ListAppointments()
+        {
+            foreach (var line in File.ReadAllLines("appointments.txt"))
+            {
+                string[] contents = line.Split(',');
+                int docID = int.Parse(contents[0]);
+                if (docID == this.doctorID)
+                {
+                    int patID = int.Parse(contents[1]);
+                    string description = contents[2];
+                    CheckPatient(patID);
+                    Console.WriteLine(docID + patID + description);
+                    //Book appointment with patientID or patient name?
+                }
+                }
+            }
+
         public void CheckPatient(int patID)
         {
             foreach (var line in File.ReadAllLines("emp.txt"))
@@ -134,6 +152,11 @@ namespace HospitalManagement
         public string DoctorPW
         {
             get { return doctorPW; }
+        }
+
+        public override string ToString()
+        {
+            return $"{role},{DoctorID},{DoctorPW}";
         }
     }
 }

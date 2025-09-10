@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,28 +17,74 @@ namespace HospitalManagement
             : base(id, password)
         {
             role = "patient";
+            patientID = id;
+            patientPW = password;
             DoctorID = doctorID;
         }
 
-        public override void ShowMenu()
+        public override void ShowMenu(List<User> allUsers)
         {
             bool running = true;
             while (running)
             {
                 Console.WriteLine("Patient Menu");
                 string choice = Console.ReadLine();
+
                 if (choice == "1")
                 {
-                    var ap = new Appointment(100, patientID, "cc");
+                    Console.Clear();
+                    ListDetails();
+                }
+
+                else if (choice == "2")
+                {
+                    Console.Clear();
+                    ListDoctor();
+                }
+
+                else if (choice == "3")
+                {
+                    Console.Clear();
+                    var ap = new Appointment(100, patientID, "cc" + "\n");
                     Console.WriteLine(ap);
                 }
-                break;
             }
         }
         public void ListDetails()
         {
-            Console.WriteLine(patientID + patientPW);
+            Console.WriteLine(patientID + patientPW + DoctorID);
         }
+
+        public void ListDoctor()
+        {
+
+            if (DoctorID == null)
+            {
+                Console.WriteLine("No doctor");
+            }
+
+            else
+            {
+                foreach (var line in File.ReadAllLines("emp.txt"))
+                {
+                    string[] contents = line.Split(',');
+                    string role = contents[0];
+                    int id = int.Parse(contents[1]);
+                    string password = contents[2];
+
+                    if (role == "doctor" && id == DoctorID)
+                    {
+                        Console.WriteLine("WORK");
+                        Console.WriteLine(id);
+                        return;
+                    }
+                    }
+                Console.WriteLine("NO WORK");
+            }
+
+            }
+
+
 
         public int PatientID
         {
