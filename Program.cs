@@ -11,26 +11,31 @@ namespace HospitalManagement
         static void Main(string[] args)
         {
             List<User> users = LoadUsers("emp.txt");
-            User loggedInUser = null;
+            bool running = true;
 
-            while (loggedInUser == null)
+            while (running)
             {
-                Console.Write("Enter ID: ");
-                int id = int.Parse(Console.ReadLine());
+                User loggedInUser = null;
 
-                Console.Write("Enter password: ");
-                string password = Console.ReadLine();
+                while (loggedInUser == null)
+                {
+                    Console.Write("Enter ID: ");
+                    int id = int.Parse(Console.ReadLine());
 
-                loggedInUser = users
-                    .FirstOrDefault(u => u.ID == id && u.Password == password);
+                    Console.Write("Enter password: ");
+                    string password = Console.ReadLine();
 
-                if (loggedInUser == null)
-                    Console.WriteLine("Try again");
+                    loggedInUser = users
+                        .FirstOrDefault(u => u.ID == id && u.Password == password);
+
+                    if (loggedInUser == null)
+                        Console.WriteLine("Try again");
                 }
                 Console.WriteLine("Valid Credentials");
-            Console.Clear();
+                Console.Clear();
                 loggedInUser.ShowMenu(users);
             }
+        }
 
         static List<User> LoadUsers(string filepath)
         {

@@ -26,10 +26,10 @@ namespace HospitalManagement
 
         public override void ShowMenu(List<User> allUsers)
         {
-            Console.WriteLine("Patient Menu");
             bool running = true;
             while (running)
             {
+                Console.WriteLine("Patient Menu");
                 string choice = Console.ReadLine();
 
                 if (choice == "1")
@@ -60,13 +60,21 @@ namespace HospitalManagement
                 else if (choice == "5")
                 {
                     Console.Clear();
-                    Console.WriteLine("Exit to login");
+                    running = false;
+                    break;
                 }
 
                 else if (choice == "6")
                 {
                     Console.Clear();
-                    Console.WriteLine("Exit system");
+                    Environment.Exit(0);
+                }
+
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Enter a valid option: ");
+                    continue;
                 }
             }
         }

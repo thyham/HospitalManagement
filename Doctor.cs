@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace HospitalManagement
 {
@@ -25,11 +27,11 @@ namespace HospitalManagement
 
         public override void ShowMenu(List<User> allUsers)
         {
-            Console.WriteLine("Doctor Menu: " + doctorID);
-            Console.WriteLine("Please choose an option: ");
             bool running = true;
             while (running)
             {
+                Console.WriteLine("Doctor Menu: " + doctorID);
+                Console.WriteLine("Please choose an option: ");
                 string choice = Console.ReadLine();
 
                 if (choice == "1") {
@@ -47,34 +49,42 @@ namespace HospitalManagement
                 {
                     //Console.WriteLine("Enter Description: ");
                     Console.Clear();
-                    var ap = new Appointment(4, 28, "description");
-                    File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
                     ListAppointments();
                 }
 
                 else if (choice == "4")
                 {
                     Console.Clear();
-                    string inputID = Console.ReadLine();
-                    int id;
-                    bool isInteger = int.TryParse(inputID, out id);
+                    CheckPatient();
+                    
+                }
 
-                    if (isInteger)
-                    {
-                        CheckPatient(id);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Enter a valid ID");
-                    }
+                else if (choice == "5")
+                {
+                    Console.Clear();
+                    ListPatientAppointment();
 
                 }
 
-                else if (choice == "Exit")
+                else if (choice == "6")
                 {
+                    Console.Clear();
+                    running = false;
                     break;
                 }
-                continue;
+
+                else if (choice == "7")
+                {
+                    Console.Clear();
+                    Environment.Exit(0);
+                }
+
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Enter a valid option: ");
+                    continue;
+                }
             }
         }
 
@@ -112,38 +122,124 @@ namespace HospitalManagement
             {
                 string[] contents = line.Split(',');
                 int docID = int.Parse(contents[0]);
-                if (docID == this.doctorID)
-                {
-                    int patID = int.Parse(contents[1]);
-                    string description = contents[2];
-                    CheckPatient(patID);
-                    Console.WriteLine(docID + patID + description);
-                    //Book appointment with patientID or patient name?
-                }
-                }
+                int patID = int.Parse(contents[1]);
+                string description = contents[2];
+                Console.WriteLine("Patient details:");
+                Console.WriteLine($"Doctor ID: {docID}");
+                Console.WriteLine($"Patient ID: {patID}");
+                Console.WriteLine($"Description: {description}");
+                //Book appointment with patientID or patient name?
             }
+        }
 
-        public void CheckPatient(int patID)
+        public void CheckPatient()
         {
-            foreach (var line in File.ReadAllLines("emp.txt"))
+            while (true)
             {
-                string[] contents = line.Split(',');
-                string role = contents[0];
+                Console.WriteLine("Enter a patient ID: ");
+                string raw = Console.ReadLine();
 
-                if (role == "patient")
+                if (raw.Equals("e"))
+                    break;
+
+                // ✅ Validate integer input
+                if (!int.TryParse(raw, out int inputId))
                 {
-                    int id = int.Parse(contents[1]);
-                    string password = contents[2];
-                    int? doctorID = contents.Length > 3 ? int.Parse(contents[3]) : null;
+                    Console.WriteLine("Invalid input. Please enter a number.");
+                    continue;
+                }
 
-                    if (id == patID && doctorID == this.doctorID)
+                // ✅ Search patients
+                bool found = false;
+
+                foreach (var line in File.ReadAllLines("emp.txt"))
+                {
+                    string[] contents = line.Split(',');
+                    string role = contents[0];
+
+                    if (role.Equals("patient"))
                     {
-                        Console.WriteLine(id);
-                    }
+                        int patid = int.Parse(contents[1]);
+                        string password = contents[2];
+                        int? doctorID = contents.Length > 3 ? int.Parse(contents[3]) : null;
 
+                        if (patid == inputId)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Patient details:");
+                            Console.WriteLine($"ID: {patid}");
+                            Console.WriteLine($"Password: {password}");
+                            Console.WriteLine($"Doctor ID: {(doctorID.HasValue ? doctorID.Value.ToString() : "No doctor assigned")}");
+
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!found)
+                {
+                    Console.Clear();
+                    Console.WriteLine($"No patient found with ID {inputId}. Please try again.");
+                }
+                else
+                {
+                    break;
                 }
             }
         }
+
+        public void ListPatientAppointment()
+        {
+            while (true)
+            {
+                Console.WriteLine("Enter a patient ID: ");
+                string raw = Console.ReadLine();
+
+                if (raw.Equals("e"))
+                    break;
+
+                // ✅ Validate integer input
+                if (!int.TryParse(raw, out int inputId))
+                {
+                    Console.WriteLine("Invalid input. Please enter a number.");
+                    continue;
+                }
+
+                // ✅ Search patients
+                bool found = false;
+
+                foreach (var line in File.ReadAllLines("appointments.txt"))
+                {
+                    string[] contents = line.Split(',');
+                    int docID = int.Parse(contents[0]);
+                    int patID = int.Parse(contents[1]);
+
+                    if (patID.Equals(inputId) && docID == doctorID)
+                    {
+                        string description = contents[2];
+                        Console.WriteLine("Patient details:");
+                        Console.WriteLine($"Doctor ID: {docID}");
+                        Console.WriteLine($"Patient ID: {patID}");
+                        Console.WriteLine($"Description: {description}");
+
+                        found = true;
+                    }
+                }
+
+                if (!found)
+                {
+                    Console.Clear();
+                    Console.WriteLine($"No patient found with ID {inputId}. Please try again.");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+
 
         public int DoctorID
         {
