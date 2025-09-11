@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HospitalManagement
 {
@@ -24,10 +26,10 @@ namespace HospitalManagement
 
         public override void ShowMenu(List<User> allUsers)
         {
+            Console.WriteLine("Patient Menu");
             bool running = true;
             while (running)
             {
-                Console.WriteLine("Patient Menu");
                 string choice = Console.ReadLine();
 
                 if (choice == "1")
@@ -45,8 +47,26 @@ namespace HospitalManagement
                 else if (choice == "3")
                 {
                     Console.Clear();
-                    var ap = new Appointment(100, patientID, "cc" + "\n");
-                    Console.WriteLine(ap);
+                    ListAppointments();
+                }
+
+
+                else if (choice == "4")
+                {
+                    Console.Clear();
+                    BookAppointment();
+                }
+
+                else if (choice == "5")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Exit to login");
+                }
+
+                else if (choice == "6")
+                {
+                    Console.Clear();
+                    Console.WriteLine("Exit system");
                 }
             }
         }
@@ -83,7 +103,83 @@ namespace HospitalManagement
             }
 
             }
+        public void ListAppointments()
+        {
+            foreach (var line in File.ReadAllLines("appointments.txt"))
+            {
+                string[] contents = line.Split(',');
+                int docID = int.Parse(contents[0]);
+                int patID = int.Parse(contents[1]);
+                if (patID == patientID)
+                {
+                    string description = contents[2];
+                    string name = GetDoctorName(docID);
+                    Console.WriteLine(name + patID + description);
+                    //Book appointment with patientID or patient name?
+                }
+            }
+        }
 
+        public string GetDoctorName(int id)
+        {
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                int docID = int.Parse(contents[1]);
+                if (docID == id)
+                {
+                    string name = contents[2];
+                    return name;
+                }
+            }
+            return "";
+        }
+
+        public void BookAppointment()
+        {
+
+            if (DoctorID != null)
+            {
+                Console.WriteLine("Booking with doctor: ");
+                var ap = new Appointment(DoctorID.Value, patientID, "Working?");
+                File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
+            }
+            while (DoctorID == null)
+            {
+                Console.WriteLine("Choose a doctor");
+                int chooseDoctor = int.Parse(Console.ReadLine());
+
+                if (DoctorExists(chooseDoctor))
+                {
+                    DoctorID = chooseDoctor;
+                    var ap = new Appointment(chooseDoctor, patientID, "TIMOTHY");
+                    File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
+                    break;
+                }
+
+                else {
+                    Console.WriteLine("No exist Try again");
+                }
+                
+            }
+        }
+
+
+        public bool DoctorExists(int id)
+        {
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                string role = contents[0];
+                int docID = int.Parse(contents[1]);
+                if (role == "doctor" && docID == id)
+                {
+                    Console.WriteLine(docID + " " + id);
+                    return true;
+                }
+            }
+            return false;
+        }
 
 
         public int PatientID

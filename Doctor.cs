@@ -46,6 +46,7 @@ namespace HospitalManagement
                 else if (choice == "3")
                 {
                     //Console.WriteLine("Enter Description: ");
+                    Console.Clear();
                     var ap = new Appointment(4, 28, "description");
                     File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
                     ListAppointments();
