@@ -35,6 +35,12 @@ namespace HospitalManagement
             //State = state;
         }
 
+        protected void WaitForKey()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Press any key to return to the menu...");
+            Console.ReadKey(true); 
+        }
 
         public abstract void ShowMenu(List<User> allUsers);
     }

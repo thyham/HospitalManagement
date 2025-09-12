@@ -30,6 +30,7 @@ namespace HospitalManagement
             bool running = true;
             while (running)
             {
+                Console.Clear();
                 Console.WriteLine("Doctor Menu: " + doctorID);
                 Console.WriteLine("Please choose an option: ");
                 string choice = Console.ReadLine();
@@ -37,32 +38,36 @@ namespace HospitalManagement
                 if (choice == "1") {
                     Console.Clear();
                     ListDoctorDetails();
+                    WaitForKey();
                 }
 
                 else if (choice == "2")
                 {
                     Console.Clear();
                     ListPatients();
+                    WaitForKey();
                 }
 
                 else if (choice == "3")
                 {
-                    //Console.WriteLine("Enter Description: ");
                     Console.Clear();
                     ListAppointments();
+                    WaitForKey();
                 }
 
                 else if (choice == "4")
                 {
                     Console.Clear();
                     CheckPatient();
-                    
+                    WaitForKey();
+
                 }
 
                 else if (choice == "5")
                 {
                     Console.Clear();
                     ListPatientAppointment();
+                    WaitForKey();
 
                 }
 

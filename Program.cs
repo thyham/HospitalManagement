@@ -62,6 +62,7 @@ namespace HospitalManagement
             {
                 "doctor" => new Doctor(id, password),
                 "patient" => new Patient(id, password, contents.Length > 3 ? int.Parse(contents[3]) : (int?)null),
+                "admin" => new Admin(id, password),
                 _ => throw new Exception($"Unknown role: {role}")
             };
         }

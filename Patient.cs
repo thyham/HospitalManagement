@@ -29,6 +29,7 @@ namespace HospitalManagement
             bool running = true;
             while (running)
             {
+                Console.Clear();
                 Console.WriteLine("Patient Menu");
                 string choice = Console.ReadLine();
 
@@ -36,18 +37,21 @@ namespace HospitalManagement
                 {
                     Console.Clear();
                     ListDetails();
+                    WaitForKey();
                 }
 
                 else if (choice == "2")
                 {
                     Console.Clear();
                     ListDoctor();
+                    WaitForKey();
                 }
 
                 else if (choice == "3")
                 {
                     Console.Clear();
                     ListAppointments();
+                    WaitForKey();
                 }
 
 
@@ -55,6 +59,7 @@ namespace HospitalManagement
                 {
                     Console.Clear();
                     BookAppointment();
+                    WaitForKey();
                 }
 
                 else if (choice == "5")
@@ -198,6 +203,11 @@ namespace HospitalManagement
         public string PatientPW
         {
             get { return patientPW; }
+        }
+
+        public override string ToString()
+        {
+            return $"{role},{PatientID},{PatientPW}";
         }
 
     }
