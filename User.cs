@@ -12,17 +12,17 @@ namespace HospitalManagement
         public string Role { get; set; }
         public int ID { get; set; }
         public string Password { get; set; }
-        public string FName { get; set; }
-        public string LName { get; set; }
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
-        public int StreetNo { get; set; }
-        public string Street { get; set; }
-        public string City { get; set; }
-        public string State { get; set; }
+        public string? FName { get; set; }
+        public string? LName { get; set; }
+        public string? Email { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? StreetNo { get; set; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
 
         //, string fname, string lname,  string email, int phoneNumber, int streetno, string street, string city, string state
-        protected User(int id, string password, string fname, string lname, string email, string phoneNumber, int streetno, string street, string city, string state)
+        protected User(int id, string password, string? fname = null, string? lname = null, string? email = null, string? phoneNumber = null, string? streetno = null, string? street = null, string? city = null, string? state = null)
         {
             ID = id;
             Password = password;
@@ -43,6 +43,6 @@ namespace HospitalManagement
             Console.ReadKey(true); 
         }
 
-        public abstract void ShowMenu(List<User> allUsers);
+        public abstract void ShowMenu();
     }
 }

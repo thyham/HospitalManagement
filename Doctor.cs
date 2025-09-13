@@ -20,11 +20,11 @@ namespace HospitalManagement
         public string LName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public int StreetNo { get; set; }
+        public string StreetNo { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public Doctor(int id, string password, string fname, string lname, string email, string phoneNumber, int streetno, string street, string city, string state, int? doctorID = null)
+        public Doctor(int id, string password, string fname, string lname, string email, string phoneNumber, string streetno, string street, string city, string state, int? doctorID = null)
             : base(id, password, fname, lname, email, phoneNumber, streetno, street, city, state)
         {
             Role = "doctor";
@@ -41,7 +41,7 @@ namespace HospitalManagement
 
         }
 
-        public override void ShowMenu(List<User> allUsers)
+        public override void ShowMenu()
         {
             bool running = true;
             while (running)
@@ -131,23 +131,26 @@ namespace HospitalManagement
                 string role = contents[0];
                 int id = int.Parse(contents[1]);
                 string password = contents[2];
-                string fname = contents[3];
-                string lname = contents[4];
-                string email = contents[5];
-                string phone = contents[6];
-                string streetno = contents[7];
-                string street = contents[8];
-                string city = contents[9];
-                string state = contents[10];
-                int? docID = contents.Length > 11 ? int.Parse(contents[11]) : (int?)null;
+                if (role == "patient")
+                {
+                    string fname = contents[3];
+                    string lname = contents[4];
+                    string email = contents[5];
+                    string phone = contents[6];
+                    string streetno = contents[7];
+                    string street = contents[8];
+                    string city = contents[9];
+                    string state = contents[10];
+                    int? docID = contents.Length > 11 ? int.Parse(contents[11]) : (int?)null;
 
-                    if (role == "patient" && docID == ID)
+                    if (docID == ID)
                     {
-                    string docFullName = FName + " " + LName;
-                    string patFullName = $"{fname} {lname}";
-                    string fullAddress = $"{streetno} {street}, {city}, {state}";
-                    Console.WriteLine($"{docFullName,-20} | {patFullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-30}");
+                        string docFullName = FName + " " + LName;
+                        string patFullName = $"{fname} {lname}";
+                        string fullAddress = $"{streetno} {street}, {city}, {state}";
+                        Console.WriteLine($"{docFullName,-20} | {patFullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-30}");
                     }
+                }
             }
      }
 
@@ -204,10 +207,10 @@ namespace HospitalManagement
 
         public void CheckPatient()
         {
+            Console.Clear();
+            Header("Check Patient");
             while (true)
             {
-                Console.Clear();
-                Header("Check Patient");
                 Console.Write("Enter a patient ID: ");
                 string raw = Console.ReadLine();
 
@@ -217,13 +220,15 @@ namespace HospitalManagement
                 if (!int.TryParse(raw, out int inputId))
                 {
                     Console.Clear();
-                    Header("Check Patient Details");
+                    Header("Check Patient");
                     Console.WriteLine("Invalid input. Please enter a number.");
                     continue;
                 }
 
                 bool found = false;
-                Console.WriteLine($"{"Doctor",-20} | {"Patient",-20} | {"Email",-25} | {"Phone",-15} | {"Address",-10}");
+                Console.Clear();
+                Header("Check Patient");
+                Console.WriteLine($"\n{"Doctor",-20} | {"Patient",-20} | {"Email",-25} | {"Phone",-15} | {"Address",-10}");
                 Console.WriteLine(new string('-', 120));
                 foreach (var line in File.ReadAllLines("emp.txt"))
                 {
@@ -231,29 +236,34 @@ namespace HospitalManagement
                     string role = contents[0];
                     int id = int.Parse(contents[1]);
                     string password = contents[2];
-                    string fname = contents[3];
-                    string lname = contents[4];
-                    string email = contents[5];
-                    string phone = contents[6];
-                    string streetno = contents[7];
-                    string street = contents[8];
-                    string city = contents[9];
-                    string state = contents[10];
-                    int? patID = contents.Length > 11 ? int.Parse(contents[11]) : (int?)null;
 
-                    if (role == "patient" && id == inputId)
+                    if (role == "patient")
                     {
-                        found = true;
-                        string docFullName = FName + " " + LName;
-                        string patFullName = $"{fname} {lname}";
-                        string fullAddress = $"{streetno} {street}, {city}, {state}";
-                        Console.WriteLine($"{docFullName,-20} | {patFullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-10}");
-                    }
-                }
+                        string fname = contents[3];
+                        string lname = contents[4];
+                        string email = contents[5];
+                        string phone = contents[6];
+                        string streetno = contents[7];
+                        string street = contents[8];
+                        string city = contents[9];
+                        string state = contents[10];
+                        int? patID = contents.Length > 11 ? int.Parse(contents[11]) : (int?)null;
 
-                if (!found)
+                        if (role == "patient" && id == inputId)
+                        {
+                            found = true;
+                            string docFullName = FName + " " + LName;
+                            string patFullName = $"{fname} {lname}";
+                            string fullAddress = $"{streetno} {street}, {city}, {state}";
+                            Console.WriteLine($"{docFullName,-20} | {patFullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-10}");
+                        }
+                    }
+                    }
+
+                    if (!found)
                 {
-                    Header("Check Patient Details");
+                    Console.Clear();
+                    Header("Check Patient");
                     Console.WriteLine($"No patient found with ID {inputId}. Please try again.");
                 }
                 else
@@ -265,12 +275,12 @@ namespace HospitalManagement
 
         public void ListPatientAppointment()
         {
+            Console.Clear();
+            Header("Appointments With");
             while (true)
             {
-                Console.Clear();
                 bool found = false;
-                Header("Find Appointment");
-                Console.WriteLine("Enter a patient ID: ");
+                Console.Write("Enter a patient ID: ");
                 string raw = Console.ReadLine();
 
                 if (raw.Equals("e"))
@@ -279,11 +289,15 @@ namespace HospitalManagement
                 // ✅ Validate integer input
                 if (!int.TryParse(raw, out int inputId))
                 {
+                    Console.Clear();
+                    Header("Appointments With");
                     Console.WriteLine("Invalid input. Please enter a number.");
                     continue;
                 }
 
                 // ✅ Search patients
+                Console.Clear();
+                Header("Appointments With");
                 Console.WriteLine($"{"Doctor",-25} | {"Patient",-25} | {"Description",-30}");
                 Console.WriteLine(new string('-', 100));
                 foreach (var line in File.ReadAllLines("appointments.txt"))
@@ -299,7 +313,7 @@ namespace HospitalManagement
                         string fname = GetDoctorFirstName(docID);
                         string lname = GetDoctorLastName(docID);
                         string docFullName = $"{fname} {lname}";
-                        string patFullName = $"{FName} {LName}";
+                        string patFullName = GetPatientFirstName(inputId) + " " + GetPatientLastName(inputId);
 
                         Console.WriteLine($"{docFullName,-25} | {patFullName,-25} | {description,-30}");
                         break;
@@ -308,13 +322,47 @@ namespace HospitalManagement
 
                 if (!found)
                 {
-                    Console.WriteLine($"\nNo patient found with ID {inputId}. Please try again.");
+                    Console.Clear();
+                    Header("Appointments With");
+                    Console.WriteLine($"No patient found with ID {inputId}. Please try again.");
                 }
                 else
                 {
                     break;
                 }
             }
+        }
+
+        public string GetPatientFirstName(int id)
+        {
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                string role = contents[0];
+                int patID = int.Parse(contents[1]);
+                if (role == "patient" && patID == id)
+                {
+                    string name = contents[3];
+                    return name;
+                }
+            }
+            return "";
+        }
+
+        public string GetPatientLastName(int id)
+        {
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                string role = contents[0];
+                int patID = int.Parse(contents[1]);
+                if (role == "patient" && patID == id)
+                {
+                    string lname = contents[4];
+                    return lname;
+                }
+            }
+            return "";
         }
         public static void Header(string type)
         {
@@ -327,13 +375,19 @@ namespace HospitalManagement
         public static void MenuOptions()
         {
             Console.WriteLine("Please choose an option: ");
-            Console.WriteLine("1. List patient details");
-            Console.WriteLine("2. List my doctor details");
-            Console.WriteLine("3. List all appointments");
-            Console.WriteLine("4. Book appointment");
-            Console.WriteLine("5. Exist to login");
-            Console.WriteLine("6. Exit system \n");
+            Console.WriteLine("1. List doctor details");
+            Console.WriteLine("2. List patients");
+            Console.WriteLine("3. List appointments");
+            Console.WriteLine("4. Check particular patient");
+            Console.WriteLine("5. List appointments with patient");
+            Console.WriteLine("6. Logout");
+            Console.WriteLine("7. Exit \n");
 
+        }
+
+        public override string ToString()
+        {
+            return $"doctor,{ID},{Password},{FName},{LName},{Email},{PhoneNumber},{StreetNo},{Street},{City},{State}";
         }
 
     }

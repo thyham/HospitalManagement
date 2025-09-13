@@ -12,7 +12,7 @@ namespace HospitalManagement
     {
         static void Main(string[] args)
         {
-            List<User> users = LoadUsers("emp.txt");
+            List<User> users;
             bool running = true;
 
             while (running)
@@ -46,6 +46,7 @@ namespace HospitalManagement
                     // Password entry
                     Console.Write("Enter password: ");
                     string password = ReadPassword();
+                    users = LoadUsers("emp.txt"); //Had to load this to get most recent changes
 
                     loggedInUser = users
                         .FirstOrDefault(u => u.ID == id && u.Password == password);
@@ -60,7 +61,7 @@ namespace HospitalManagement
 
                 Console.WriteLine("Valid Credentials");
                 Console.Clear();
-                loggedInUser.ShowMenu(users);
+                loggedInUser.ShowMenu();
             }
         }
 
@@ -83,20 +84,12 @@ namespace HospitalManagement
             string role = contents[0];
             int id = int.Parse(contents[1]);
             string password = contents[2];
-            string fname = contents[3];
-            string lname = contents[4];
-            string email = contents[5];
-            string phoneNumber = contents[6];
-            int streetno = int.Parse(contents[7]);
-            string street = contents[8];
-            string city = contents[9];
-            string state = contents[10];
 
             return role switch
             {
-                "doctor" => new Doctor(id, password, fname, lname, email, phoneNumber, streetno, street, city, state),
-                "patient" => new Patient(id, password, fname, lname, email, phoneNumber, streetno, street, city, state, contents.Length > 11 ? int.Parse(contents[11]) : (int?)null),
-                //"admin" => new Admin(id, password),
+                "doctor" => new Doctor(id, password, contents[3], contents[4], contents[5], contents[6], contents[7], contents[8], contents[9], contents[10]),
+                "patient" => new Patient(id, password, contents[3], contents[4], contents[5], contents[6], contents[7], contents[8], contents[9], contents[10], contents.Length > 11 ? int.Parse(contents[11]) : (int?)null),
+                "admin" => new Admin(id, password),
                 _ => throw new Exception($"Unknown role: {role}")
             };
         }

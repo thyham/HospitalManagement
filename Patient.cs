@@ -20,12 +20,12 @@ namespace HospitalManagement
         public string LName { get; set; }
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
-        public int StreetNo { get; set; }
+        public string StreetNo { get; set; }
         public string Street { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         private int? DoctorID { get; set; }
-        public Patient(int id, string password, string fname, string lname, string email, string phoneNumber, int streetno, string street, string city, string state, int? doctorID = null)
+        public Patient(int id, string password, string fname, string lname, string email, string phoneNumber, string streetno, string street, string city, string state, int? doctorID = null)
             : base(id, password, fname, lname, email, phoneNumber, streetno, street, city, state)
         {
             Role = "patient";
@@ -43,7 +43,7 @@ namespace HospitalManagement
 
         }
 
-        public override void ShowMenu(List<User> allUsers)
+        public override void ShowMenu()
         {
             bool running = true;
             while (running)
@@ -135,21 +135,24 @@ namespace HospitalManagement
                     string role = contents[0];
                     int id = int.Parse(contents[1]);
                     string password = contents[2];
-                    string fname = contents[3];
-                    string lname = contents[4];
-                    string email = contents[5];
-                    string phone = contents[6];
-                    string streetno = contents[7];
-                    string street = contents[8];
-                    string city = contents[9];
-                    string state = contents[10];
-
-                    if (role == "doctor" && id == DoctorID)
+                    if (role == "doctor")
                     {
-                        string fullName = $"{fname} {lname}";
-                        string fullAddress = $"{streetno} {street}, {city}, {state}";
+                        string fname = contents[3];
+                        string lname = contents[4];
+                        string email = contents[5];
+                        string phone = contents[6];
+                        string streetno = contents[7];
+                        string street = contents[8];
+                        string city = contents[9];
+                        string state = contents[10];
 
-                        Console.WriteLine($"{fullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-30}");
+                        if (id == DoctorID)
+                        {
+                            string fullName = $"{fname} {lname}";
+                            string fullAddress = $"{streetno} {street}, {city}, {state}";
+
+                            Console.WriteLine($"{fullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-30}");
+                        }
                     }
                 }
 
@@ -184,8 +187,9 @@ namespace HospitalManagement
             foreach (var line in File.ReadAllLines("emp.txt"))
             {
                 string[] contents = line.Split(',');
+                string role = contents[0];
                 int docID = int.Parse(contents[1]);
-                if (docID == id)
+                if (role == "doctor" && docID == id)
                 {
                     string name = contents[3];
                     return name;
@@ -199,8 +203,9 @@ namespace HospitalManagement
             foreach (var line in File.ReadAllLines("emp.txt"))
             {
                 string[] contents = line.Split(',');
+                string role = contents[0];
                 int docID = int.Parse(contents[1]);
-                if (docID == id)
+                if (role == "doctor" && docID == id)
                 {
                     string lname = contents[4];
                     return lname;
@@ -241,6 +246,7 @@ namespace HospitalManagement
                         var ap = new Appointment(chooseDoctor, ID, description);
                         DoctorID = chooseDoctor;
                         File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
+                        UpdatePatientDoctor(ID, chooseDoctor);
                         Console.WriteLine("The appointment has been booked successfully.\n");
                         break;
                     }
@@ -296,6 +302,32 @@ namespace HospitalManagement
             }
         }
 
+        private void UpdatePatientDoctor(int patientId, int doctorId)
+        {
+            var lines = File.ReadAllLines("emp.txt").ToList();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                string[] parts = lines[i].Split(',');
+                if (parts[0] == "patient" && int.Parse(parts[1]) == patientId)
+                {
+                    // If already has doctor ID, replace it
+                    if (parts.Length > 11)
+                    {
+                        parts[11] = doctorId.ToString();
+                    }
+                    else
+                    {
+                        // Append doctor ID
+                        lines[i] = lines[i] + "," + doctorId;
+                    }
+                    break;
+                }
+            }
+
+            File.WriteAllLines("emp.txt", lines);
+        }
+
         public static void Header(string type)
         {
             Console.WriteLine("Timothy's Hospital Management System");
@@ -314,6 +346,11 @@ namespace HospitalManagement
             Console.WriteLine("5. Exit to login");
             Console.WriteLine("6. Exit system \n");
 
+        }
+
+        public override string ToString()
+        {
+            return $"patient,{ID},{Password},{FName},{LName},{Email},{PhoneNumber},{StreetNo},{Street},{City},{State}";
         }
     }
 }

@@ -1,261 +1,458 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
+using System.Xml.Linq;
 
-//namespace HospitalManagement
-//{
-//    class Admin : User
-//    {
-//        private int adminID;
-//        private string adminPW;
-//        private string role;
+namespace HospitalManagement
+{
+    class Admin : User
+    {
+        private int adminID;
+        private string adminPW;
+        private string role;
 
-//        public Admin(int id, string password) : base(id, password)
-//        {
-//            adminID = id;
-//            adminPW = password;
-//            role = "admin";
-//        }
+        public Admin(int id, string password) : base(id, password)
+        {
+            adminID = id;
+            adminPW = password;
+            role = "admin";
+        }
 
-//        public override void ShowMenu(List<User> allUsers)
-//        {
-//            bool running = true;
-//            while (running)
-//            {
-//                Console.Clear();
-//                Console.WriteLine("Admin Menu: " + adminID);
-//                Console.WriteLine("Please choose an option: ");
-//                string choice = Console.ReadLine();
+        public override void ShowMenu()
+        {
+            bool running = true;
+            while (running)
+            {
+                Console.Clear();
+                Header("Admin Menu");
+                MenuOptions();
+                Console.Write("Please choose an option: ");
+                string choice = Console.ReadLine();
 
-//                if (choice == "1")
-//                {
-//                    Console.Clear();
-//                    ListDoctors();
-//                    WaitForKey();
+                if (choice == "1")
+                {
+                    Console.Clear();
+                    ListDoctors();
+                    WaitForKey();
 
-//                }
+                }
 
-//                else if (choice == "2")
-//                {
-//                    Console.Clear();
-//                    CheckDoctor();
-//                    WaitForKey();
-//                }
+                else if (choice == "2")
+                {
+                    Console.Clear();
+                    CheckDoctor();
+                    WaitForKey();
+                }
 
-//                else if (choice == "3")
-//                {
-//                    Console.Clear();
-//                    ListPatients();
-//                    WaitForKey();
-//                }
+                else if (choice == "3")
+                {
+                    Console.Clear();
+                    ListPatients();
+                    WaitForKey();
+                }
 
-//                else if (choice == "4")
-//                {
-//                    Console.Clear();
-//                    CheckPatient();
-//                    WaitForKey();
-//                }
+                else if (choice == "4")
+                {
+                    Console.Clear();
+                    CheckPatient();
+                    WaitForKey();
+                }
 
-//                else if (choice == "5")
-//                {
-//                    Console.Clear();
-//                    AddDoctor();
-//                    WaitForKey();
-//                }
+                else if (choice == "5")
+                {
+                    Console.Clear();
+                    AddDoctor();
+                    WaitForKey();
+                }
 
-//                else if (choice == "6")
-//                {
-//                    Console.Clear();
-//                    AddPatient();
-//                    WaitForKey();
-//                }
+                else if (choice == "6")
+                {
+                    Console.Clear();
+                    AddPatient();
+                    WaitForKey();
+                }
 
-//                else if (choice == "7")
-//                {
-//                    Console.Clear();
-//                    running = false;
-//                    break;
-//                }
+                else if (choice == "7")
+                {
+                    Console.Clear();
+                    running = false;
+                    break;
+                }
 
-//                else if (choice == "8")
-//                {
-//                    Console.Clear();
-//                    Environment.Exit(0);
-//                }
+                else if (choice == "8")
+                {
+                    Console.Clear();
+                    Environment.Exit(0);
+                }
 
-//                else
-//                {
-//                    Console.Clear();
-//                    Console.WriteLine("Enter a valid option: ");
-//                    continue;
-//                }
-//            }
-//        }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Enter a valid option: ");
+                    continue;
+                }
+            }
+        }
 
-//        public void ListDoctors()
-//        {
-//            foreach (var line in File.ReadAllLines("emp.txt"))
-//            {
-//                string[] contents = line.Split(',');
-//                string role = contents[0];
+        public void ListDoctors()
+        {
+            Console.Clear();
+            Header("All Doctors");
+            Console.WriteLine($"{"Name",-20} | {"Email",-25} | {"Phone",-15} | {"Address",-10}");
+            Console.WriteLine(new string('-', 120));
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                string role = contents[0];
+                int id = int.Parse(contents[1]);
+                string password = contents[2];
+                if (role == "doctor")
+                {
+                    string fname = contents[3];
+                    string lname = contents[4];
+                    string email = contents[5];
+                    string phone = contents[6];
+                    string streetno = contents[7];
+                    string street = contents[8];
+                    string city = contents[9];
+                    string state = contents[10];
+                    int? docID = contents.Length > 11 ? int.Parse(contents[11]) : (int?)null;
+                    string docFullName = $"{fname} {lname}";
+                    string fullAddress = $"{streetno} {street}, {city}, {state}";
+                    Console.WriteLine($"{docFullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-10}");
+                }
+            }
+        }
 
-//                if (role == "doctor")
-//                {
-//                    int id = int.Parse(contents[1]);
-//                    string password = contents[2];
-//                    int? doctorID = contents.Length > 3 ? int.Parse(contents[3]) : null;
-//                    Console.WriteLine(id + password);
+        public void CheckDoctor() //show error message prompt correctly
+        {
+            Console.Clear();
+            Header("Doctor Details");
+            while (true)
+            {
+                Console.Write("Enter a doctor ID: ");
+                string raw = Console.ReadLine();
 
-//                }
-//            }
-//        }
+                if (raw.Equals("e"))
+                    break;
 
-//        public void CheckDoctor()
-//        {
-//            while (true)
-//            {
-//                Console.WriteLine("Enter a doctor ID: ");
-//                string raw = Console.ReadLine();
+                // ✅ Validate integer input
+                if (!int.TryParse(raw, out int inputId))
+                {
+                    Console.Clear();
+                    Header("Doctor Details");
+                    Console.WriteLine("Invalid input. Please enter a number.");
+                    continue;
+                }
 
-//                if (raw.Equals("e"))
-//                    break;
+                // ✅ Search patients
+                bool found = false;
 
-//                // ✅ Validate integer input
-//                if (!int.TryParse(raw, out int inputId))
-//                {
-//                    Console.WriteLine("Invalid input. Please enter a number.");
-//                    continue;
-//                }
+                Console.Clear();
+                Header("Doctor Details");
+                Console.WriteLine($"{"Name",-20} | {"Email",-25} | {"Phone",-15} | {"Address",-10}");
+                Console.WriteLine(new string('-', 120));
+                foreach (var line in File.ReadAllLines("emp.txt"))
+                {
+                    string[] contents = line.Split(',');
+                    string role = contents[0];
+                    int id = int.Parse(contents[1]);
+                    string password = contents[2];
+                    if (role.Equals("doctor") && id == inputId)
+                    {
+                        string fname = contents[3];
+                        string lname = contents[4];
+                        string email = contents[5];
+                        string phone = contents[6];
+                        string streetno = contents[7];
+                        string street = contents[8];
+                        string city = contents[9];
+                        string state = contents[10];
+                        int? patID = contents.Length > 11 ? int.Parse(contents[11]) : (int?)null;
+                        string docFullName = $"{fname} {lname}";
+                        string fullAddress = $"{streetno} {street}, {city}, {state}";
+                        Console.WriteLine($"{docFullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-10}");
+                        found = true;
+                        break;
+                    }
+                }
 
-//                // ✅ Search patients
-//                bool found = false;
+                if (!found)
+                {
+                    Console.Clear();
+                    Header("Doctor Details");
+                    Console.WriteLine($"No doctor found with ID {inputId}. Please try again.");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
 
-//                foreach (var line in File.ReadAllLines("emp.txt"))
-//                {
-//                    string[] contents = line.Split(',');
-//                    string role = contents[0];
+        public void ListPatients()
+        {
+            Console.Clear();
+            Header("All Patients");
+            Console.WriteLine($"{"Name",-20} | {"Email",-25} | {"Phone",-15} | {"Address",-10}");
+            Console.WriteLine(new string('-', 120));
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                string role = contents[0];
+                int id = int.Parse(contents[1]);
+                string password = contents[2];
+                if (role == "patient")
+                {
+                    string fname = contents[3];
+                    string lname = contents[4];
+                    string email = contents[5];
+                    string phone = contents[6];
+                    string streetno = contents[7];
+                    string street = contents[8];
+                    string city = contents[9];
+                    string state = contents[10];
+                    string docFullName = $"{fname} {lname}";
+                    string fullAddress = $"{streetno} {street}, {city}, {state}";
+                    Console.WriteLine($"{docFullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-10}");
+                }
+            }
+        }
 
-//                    if (role.Equals("doctor"))
-//                    {
-//                        int docid = int.Parse(contents[1]);
-//                        string password = contents[2];
+        public string GetDoctorFirstName(int id)
+        {
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                int docID = int.Parse(contents[1]);
+                if (docID == id)
+                {
+                    string name = contents[3];
+                    return name;
+                }
+            }
+            return "";
+        }
 
-//                        if (docid == inputId)
-//                        {
-//                            Console.Clear();
-//                            Console.WriteLine("Doctor details:");
-//                            Console.WriteLine($"ID: {docid}");
-//                            Console.WriteLine($"Password: {password}");
+        public string GetDoctorLastName(int id)
+        {
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                int docID = int.Parse(contents[1]);
+                if (docID == id)
+                {
+                    string lname = contents[4];
+                    return lname;
+                }
+            }
+            return "";
+        }
 
-//                            found = true;
-//                            break;
-//                        }
-//                    }
-//                }
+        public void CheckPatient() //show error message prompt correctly
+        {
+            Console.Clear();
+            Header("Patient Details");
+            while (true)
+            {
+                Console.Write("Enter a Patient ID: ");
+                string raw = Console.ReadLine();
 
-//                if (!found)
-//                {
-//                    Console.Clear();
-//                    Console.WriteLine($"No doctor found with ID {inputId}. Please try again.");
-//                }
-//                else
-//                {
-//                    break;
-//                }
-//            }
-//        }
+                if (raw.Equals("e"))
+                    break;
 
-//        public void ListPatients()
-//        {
-//            foreach (var line in File.ReadAllLines("emp.txt"))
-//            {
-//                string[] contents = line.Split(',');
-//                string role = contents[0];
+                // ✅ Validate integer input
+                if (!int.TryParse(raw, out int inputId))
+                {
+                    Console.Clear();
+                    Header("Patient Details");
+                    Console.WriteLine("Invalid input. Please enter a number.");
+                    continue;
+                }
 
-//                if (role == "patient")
-//                {
-//                    int id = int.Parse(contents[1]);
-//                    string password = contents[2];
-//                    int? doctorID = contents.Length > 3 ? int.Parse(contents[3]) : null;
-//                    Console.WriteLine(id + password);
+                // ✅ Search patients
+                bool found = false;
+                Console.Clear();
+                Header("Patient Details");
 
-//                }
-//            }
-//        }
+                Console.WriteLine($"{"Patient",-20} | {"Doctor",-20} | {"Email",-25} | {"Phone",-15} | {"Address",-10}");
+                Console.WriteLine(new string('-', 120));
+                foreach (var line in File.ReadAllLines("emp.txt"))
+                {
+                    string[] contents = line.Split(',');
+                    string role = contents[0];
+                    int id = int.Parse(contents[1]);
+                    string password = contents[2];
+                    if (role.Equals("patient") && id == inputId)
+                    {
+                        string fname = contents[3];
+                        string lname = contents[4];
+                        string email = contents[5];
+                        string phone = contents[6];
+                        string streetno = contents[7];
+                        string street = contents[8];
+                        string city = contents[9];
+                        string state = contents[10];
+                        int? docID = contents.Length > 11 ? int.Parse(contents[11]) : (int?)null;
+                        string patFullName = $"{fname} {lname}";
+                        string fullAddress = $"{streetno} {street}, {city}, {state}";
+                        string docFullName = "";
+                        if (docID != null)
+                        {
+                            string docfname = GetDoctorFirstName(docID.Value);
+                            string doclname = GetDoctorLastName(docID.Value);
+                            docFullName = $"{docfname} {doclname}";
+                        }
+                        Console.WriteLine($"{patFullName,-20} | {docFullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-30}");
 
-//        public void CheckPatient()
-//        {
-//            while (true)
-//            {
-//                Console.WriteLine("Enter a patient ID: ");
-//                string raw = Console.ReadLine();
+                        found = true;
+                        break;
 
-//                if (raw.Equals("e"))
-//                    break;
+                    }
+                }
 
-//                // ✅ Validate integer input
-//                if (!int.TryParse(raw, out int inputId))
-//                {
-//                    Console.WriteLine("Invalid input. Please enter a number.");
-//                    continue;
-//                }
+                if (!found)
+                {
+                    Console.Clear();
+                    Header("Patient Details");
+                    Console.WriteLine($"No patient found with ID {inputId}. Please try again.");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
 
-//                // ✅ Search patients
-//                bool found = false;
+        public void AddDoctor()
+        {
+            Console.Clear();
+            Header("Add Doctor");
+            Console.WriteLine("Registering a new doctor with the Hospital Management System \n");
+            Console.WriteLine("Doctor ID: " + GenerateDoctorID());
+            Console.Write("First Name: ");
+            var fname = Console.ReadLine();
 
-//                foreach (var line in File.ReadAllLines("emp.txt"))
-//                {
-//                    string[] contents = line.Split(',');
-//                    string role = contents[0];
+            Console.Write("Last Name: ");
+            var lname = Console.ReadLine();
 
-//                    if (role.Equals("patient"))
-//                    {
-//                        int patid = int.Parse(contents[1]);
-//                        string password = contents[2];
+            Console.Write("Email: ");
+            var email = Console.ReadLine();
 
-//                        if (patid == inputId)
-//                        {
-//                            Console.Clear();
-//                            Console.WriteLine("Patient details:");
-//                            Console.WriteLine($"ID: {patid}");
-//                            Console.WriteLine($"Password: {password}");
+            Console.Write("Phone: ");
+            var phone = Console.ReadLine();
 
-//                            found = true;
-//                            break;
-//                        }
-//                    }
-//                }
+            Console.Write("Street Number: ");
+            var streetNo = Console.ReadLine();
 
-//                if (!found)
-//                {
-//                    Console.Clear();
-//                    Console.WriteLine($"No patient found with ID {inputId}. Please try again.");
-//                }
-//                else
-//                {
-//                    break;
-//                }
-//            }
-//        }
+            Console.Write("Street: ");
+            var street = Console.ReadLine();
 
-//        public void AddDoctor()
-//        {
-//            Console.WriteLine("Add a doctor");
-//            var name = Console.ReadLine();
-//            Console.WriteLine();
-//            var newDoctor = new Doctor(5, name);
-//            File.AppendAllText("emp.txt", newDoctor.ToString() + Environment.NewLine);
-//        }
+            Console.Write("City: ");
+            var city = Console.ReadLine();
 
-//        public void AddPatient()
-//        {
-//            Console.WriteLine("Add a patient");
-//            var name = Console.ReadLine();
-//            Console.WriteLine();
-//            var newPatient = new Patient(5, name);
-//            File.AppendAllText("emp.txt", newPatient.ToString() + Environment.NewLine);
-//        }
-//    }
-//}
+            Console.Write("State: ");
+            var state = Console.ReadLine();
+
+            Console.Write("Enter a password: ");
+            var password = Console.ReadLine();
+
+            var newDoctor = new Doctor(GenerateDoctorID(), password, fname, lname, email, phone, streetNo, street, city, state);
+            File.AppendAllText("emp.txt", newDoctor.ToString() + Environment.NewLine);
+        }
+
+        public void AddPatient()
+        {
+            Console.Clear();
+            Header("Add Patient");
+            Console.WriteLine("Registering a new patient with the Hospital Management System \n");
+            Console.WriteLine("Patient ID: " + GeneratePatientID());
+            Console.Write("First Name: ");
+            var fname = Console.ReadLine();
+
+            Console.Write("Last Name: ");
+            var lname = Console.ReadLine();
+
+            Console.Write("Email: ");
+            var email = Console.ReadLine();
+
+            Console.Write("Phone: ");
+            var phone = Console.ReadLine();
+
+            Console.Write("Street Number: ");
+            var streetNo = Console.ReadLine();
+
+            Console.Write("Street: ");
+            var street = Console.ReadLine();
+
+            Console.Write("City: ");
+            var city = Console.ReadLine();
+
+            Console.Write("State: ");
+            var state = Console.ReadLine();
+
+            Console.Write("Enter a password: ");
+            var password = Console.ReadLine();
+
+            Console.WriteLine();
+            var newPatient = new Patient(GeneratePatientID(), password, fname, lname, email, phone, streetNo, street, city, state);
+            File.AppendAllText("emp.txt", newPatient.ToString() + Environment.NewLine);
+        }
+
+        public int GenerateDoctorID()
+        {
+            int count = 100;
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                string role = contents[0];
+                if (role == "doctor")
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public int GeneratePatientID()
+        {
+            int count = 100;
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                string role = contents[0];
+                if (role == "patient")
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public static void Header(string type)
+        {
+            Console.WriteLine("Timothy's Hospital Management System");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine($"            {type}           ");
+            Console.WriteLine("\n");
+        }
+
+        public static void MenuOptions()
+        {
+            Console.WriteLine("Please choose an option: ");
+            Console.WriteLine("1. List all doctors");
+            Console.WriteLine("2. Check doctor details");
+            Console.WriteLine("3. List all patients");
+            Console.WriteLine("4. Check patient details");
+            Console.WriteLine("5. Add doctor");
+            Console.WriteLine("6. Add patient");
+            Console.WriteLine("7. Logout");
+            Console.WriteLine("8. Exit \n");
+        }
+
+    }
+}
