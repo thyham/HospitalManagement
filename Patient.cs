@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.IO;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -11,17 +13,34 @@ namespace HospitalManagement
 {
     class Patient : User
     {
-        private string role;
-        private int patientID;
-        private string patientPW;
-        private int? DoctorID;
-        public Patient(int id, string password, int? doctorID = null)
-            : base(id, password)
+        public string Role { get; set; }
+        public int ID { get; set; }
+        public string Password { get; set; }
+        public string FName { get; set; }
+        public string LName { get; set; }
+        public string Email { get; set; }
+        public string PhoneNumber { get; set; }
+        public int StreetNo { get; set; }
+        public string Street { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        private int? DoctorID { get; set; }
+        public Patient(int id, string password, string fname, string lname, string email, string phoneNumber, int streetno, string street, string city, string state, int? doctorID = null)
+            : base(id, password, fname, lname, email, phoneNumber, streetno, street, city, state)
         {
-            role = "patient";
-            patientID = id;
-            patientPW = password;
+            Role = "patient";
+            ID = id;
+            Password = password;
+            FName = fname;
+            LName = lname;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            StreetNo = streetno;
+            Street = street;
+            City = city;
+            State = state;
             DoctorID = doctorID;
+
         }
 
         public override void ShowMenu(List<User> allUsers)
@@ -30,19 +49,22 @@ namespace HospitalManagement
             while (running)
             {
                 Console.Clear();
-                Console.WriteLine("Patient Menu");
+                Header("Patient Menu");
+                MenuOptions();
                 string choice = Console.ReadLine();
 
                 if (choice == "1")
                 {
                     Console.Clear();
-                    ListDetails();
+                    Header("My Details");
+                    ListPatientDetails();
                     WaitForKey();
                 }
 
                 else if (choice == "2")
                 {
                     Console.Clear();
+                    Header("My Doctor");
                     ListDoctor();
                     WaitForKey();
                 }
@@ -50,6 +72,7 @@ namespace HospitalManagement
                 else if (choice == "3")
                 {
                     Console.Clear();
+                    Header("My Appointments");
                     ListAppointments();
                     WaitForKey();
                 }
@@ -58,6 +81,7 @@ namespace HospitalManagement
                 else if (choice == "4")
                 {
                     Console.Clear();
+                    Header("Book Appointment");
                     BookAppointment();
                     WaitForKey();
                 }
@@ -83,9 +107,13 @@ namespace HospitalManagement
                 }
             }
         }
-        public void ListDetails()
+        public void ListPatientDetails()
         {
-            Console.WriteLine(patientID + patientPW + DoctorID);
+            Console.WriteLine("Patient ID: " + ID);
+            Console.WriteLine("Full Name: " + FName + " " + LName);
+            Console.WriteLine("Address: " + StreetNo + " " + Street + " " + City + " " + State);
+            Console.WriteLine("Email: " + Email);
+            Console.WriteLine("Phone: " + PhoneNumber);
         }
 
         public void ListDoctor()
@@ -98,42 +126,60 @@ namespace HospitalManagement
 
             else
             {
+                Console.WriteLine($"{"Name",-20} | {"Email Address",-25} | {"Phone",-15} | {"Address",-30}");
+                Console.WriteLine(new string('-', 100));
+
                 foreach (var line in File.ReadAllLines("emp.txt"))
                 {
                     string[] contents = line.Split(',');
                     string role = contents[0];
                     int id = int.Parse(contents[1]);
                     string password = contents[2];
+                    string fname = contents[3];
+                    string lname = contents[4];
+                    string email = contents[5];
+                    string phone = contents[6];
+                    string streetno = contents[7];
+                    string street = contents[8];
+                    string city = contents[9];
+                    string state = contents[10];
 
                     if (role == "doctor" && id == DoctorID)
                     {
-                        Console.WriteLine("WORK");
-                        Console.WriteLine(id);
-                        return;
+                        string fullName = $"{fname} {lname}";
+                        string fullAddress = $"{streetno} {street}, {city}, {state}";
+
+                        Console.WriteLine($"{fullName,-20} | {email,-25} | {phone,-15} | {fullAddress,-30}");
                     }
-                    }
-                Console.WriteLine("NO WORK");
-            }
+                }
 
             }
+        }
+
         public void ListAppointments()
         {
+            Console.WriteLine($"{"Doctor",-25} | {"Patient",-25} | {"Description",-30}");
+            Console.WriteLine(new string('-', 100));
             foreach (var line in File.ReadAllLines("appointments.txt"))
             {
                 string[] contents = line.Split(',');
                 int docID = int.Parse(contents[0]);
                 int patID = int.Parse(contents[1]);
-                if (patID == patientID)
+                if (patID == ID)
                 {
                     string description = contents[2];
-                    string name = GetDoctorName(docID);
-                    Console.WriteLine(name + patID + description);
+                    string fname = GetDoctorFirstName(docID);
+                    string lname = GetDoctorLastName(docID);
+                    string docFullName = $"{fname} {lname}";
+                    string patFullName = $"{FName} {LName}";
+
+                    Console.WriteLine($"{docFullName,-25} | {patFullName,-25} | {description,-30}");
                     //Book appointment with patientID or patient name?
                 }
             }
         }
 
-        public string GetDoctorName(int id)
+        public string GetDoctorFirstName(int id)
         {
             foreach (var line in File.ReadAllLines("emp.txt"))
             {
@@ -141,39 +187,77 @@ namespace HospitalManagement
                 int docID = int.Parse(contents[1]);
                 if (docID == id)
                 {
-                    string name = contents[2];
+                    string name = contents[3];
                     return name;
                 }
             }
             return "";
         }
 
+        public string GetDoctorLastName(int id)
+        {
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                string[] contents = line.Split(',');
+                int docID = int.Parse(contents[1]);
+                if (docID == id)
+                {
+                    string lname = contents[4];
+                    return lname;
+                }
+            }
+            return "";
+        }
+
+
         public void BookAppointment()
         {
-
             if (DoctorID != null)
             {
-                Console.WriteLine("Booking with doctor: ");
-                var ap = new Appointment(DoctorID.Value, patientID, "Working?");
+                int docID = (int)DoctorID;
+                Console.WriteLine("Booking with Dr. " + GetDoctorFirstName(docID) + " " + GetDoctorLastName(docID));
+                Console.Write("Description of the appointment: ");
+                string? description = Console.ReadLine();
+                var ap = new Appointment(docID, ID, description);
+                DoctorID = docID;
                 File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
+                Console.WriteLine("\n The appointment has been booked successfully.");
             }
+
             while (DoctorID == null)
             {
-                Console.WriteLine("Choose a doctor");
-                int chooseDoctor = int.Parse(Console.ReadLine());
+                Console.WriteLine("You are not registered with any doctor! Please enter a doctor ID: ");
+                ListDoctors();
+                Console.Write("Enter a doctor ID: ");
+                string input = Console.ReadLine();
 
-                if (DoctorExists(chooseDoctor))
+
+                if (int.TryParse(input, out int chooseDoctor))
                 {
-                    DoctorID = chooseDoctor;
-                    var ap = new Appointment(chooseDoctor, patientID, "TIMOTHY");
-                    File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
-                    break;
-                }
+                    if (DoctorExists(chooseDoctor))
+                    {
+                        Console.Write("Description of the appointment: ");
+                        string? description = Console.ReadLine();
+                        var ap = new Appointment(chooseDoctor, ID, description);
+                        DoctorID = chooseDoctor;
+                        File.AppendAllText("appointments.txt", ap.ToString() + Environment.NewLine);
+                        Console.WriteLine("The appointment has been booked successfully.\n");
+                        break;
+                    }
 
-                else {
-                    Console.WriteLine("No exist Try again");
+                    else
+                    {
+                        Console.Clear();
+                        Header("Book Appointment");
+                        Console.WriteLine("Doctor ID does not exist. Try again");
+                    }
                 }
-                
+                else
+                {
+                    Console.Clear();
+                    Header("Book Appointment");
+                    Console.WriteLine("Invalid input. Please enter a numeric doctor ID.");
+                }
             }
         }
 
@@ -187,28 +271,49 @@ namespace HospitalManagement
                 int docID = int.Parse(contents[1]);
                 if (role == "doctor" && docID == id)
                 {
-                    Console.WriteLine(docID + " " + id);
                     return true;
                 }
             }
             return false;
         }
 
-
-        public int PatientID
+        public void ListDoctors()
         {
-            get { return patientID; }
+            int count = 0;
+            foreach (var line in File.ReadAllLines("emp.txt"))
+            {
+                count++;
+                string[] contents = line.Split(',');
+                string role = contents[0];
+
+                if (role == "doctor")
+                {
+                    int id = int.Parse(contents[1]);
+                    string password = contents[2];
+                    Console.WriteLine(count + ". " + id + " " + password);
+
+                }
+            }
         }
 
-        public string PatientPW
+        public static void Header(string type)
         {
-            get { return patientPW; }
+            Console.WriteLine("Timothy's Hospital Management System");
+            Console.WriteLine("------------------------------------");
+            Console.WriteLine($"            {type}           ");
+            Console.WriteLine("\n");
         }
 
-        public override string ToString()
+        public static void MenuOptions()
         {
-            return $"{role},{PatientID},{PatientPW}";
-        }
+            Console.WriteLine("Please choose an option: ");
+            Console.WriteLine("1. List patient details");
+            Console.WriteLine("2. List my doctor details");
+            Console.WriteLine("3. List all appointments");
+            Console.WriteLine("4. Book appointment");
+            Console.WriteLine("5. Exit to login");
+            Console.WriteLine("6. Exit system \n");
 
+        }
     }
 }
