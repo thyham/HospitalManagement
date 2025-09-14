@@ -387,7 +387,7 @@ namespace HospitalManagement
 
         public override string ToString()
         {
-            return $"doctor,{ID},{Password},{FName},{LName},{Email},{PhoneNumber},{StreetNo},{Street},{City},{State}";
+            return $"ID: {ID} | {FName} {LName} | {Email} | {PhoneNumber} | {StreetNo} | {Street}, {City}, {State}";
         }
 
     }

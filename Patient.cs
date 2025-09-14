@@ -231,9 +231,9 @@ namespace HospitalManagement
 
             while (DoctorID == null)
             {
-                Console.WriteLine("You are not registered with any doctor! Please enter a doctor ID: ");
+                Console.WriteLine("You are not registered with any doctor! Please choose which doctor you would like to register with\n");
                 ListDoctors();
-                Console.Write("Enter a doctor ID: ");
+                Console.Write("\nPlease enter a doctor ID: ");
                 string input = Console.ReadLine();
 
 
@@ -285,19 +285,27 @@ namespace HospitalManagement
 
         public void ListDoctors()
         {
-            int count = 0;
             foreach (var line in File.ReadAllLines("emp.txt"))
             {
-                count++;
                 string[] contents = line.Split(',');
                 string role = contents[0];
-
+                int id = int.Parse(contents[1]);
+                string password = contents[2];
                 if (role == "doctor")
                 {
-                    int id = int.Parse(contents[1]);
-                    string password = contents[2];
-                    Console.WriteLine(count + ". " + id + " " + password);
+                    string fname = contents[3];
+                    string lname = contents[4];
+                    string email = contents[5];
+                    string phone = contents[6];
+                    string streetno = contents[7];
+                    string street = contents[8];
+                    string city = contents[9];
+                    string state = contents[10];
+                    Doctor doctor = new Doctor(id, password, fname, lname, email, phone, streetno, street, city, state);
+                    string fullName = $"{fname} {lname}";
+                    string fullAddress = $"{streetno} {street}, {city}, {state}";
 
+                    Console.WriteLine(doctor.ToString());
                 }
             }
         }
