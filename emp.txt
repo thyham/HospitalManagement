@@ -1,4 +1,3 @@
-doctor,100,password
-patient,200,password,100
-patient,300,password
-doctor,400,password
+admin,1,admin
+doctor,100,password,Morton,Schmidt,ms@gmail.com,0401496174,1,John Street,Sydney,NSW
+patient,200,password,Greg,Jenko,gj@gmail.com,0417826519,2,Jump Street,Sydney,NSW
