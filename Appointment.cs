@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//Timothy Pham 24842813 
+//31927/32998 Assignment 1: C# Console Application
 
 namespace HospitalManagement
 {

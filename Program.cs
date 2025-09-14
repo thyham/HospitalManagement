@@ -1,10 +1,5 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Security.Principal;
-using System.Xml.Linq;
-using static System.Net.Mime.MediaTypeNames;
+﻿//Timothy Pham 24842813 
+//31927/32998 Assignment 1: C# Console Application
 
 namespace HospitalManagement
 {
