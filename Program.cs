@@ -43,6 +43,7 @@ namespace HospitalManagement
                     Console.Write("Enter password: ");
                     string password = ReadPassword();
                     users = LoadUsers("emp.txt"); //Initalised right before searching to retrive most recent database
+                    File.AppendAllText("emp.txt", Environment.NewLine);
 
                     loggedInUser = users
                         .FirstOrDefault(u => u.ID == id && u.Password == password);
