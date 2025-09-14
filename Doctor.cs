@@ -48,7 +48,7 @@ namespace HospitalManagement
             {
                 Console.Clear();
                 Header("Doctor Menu");
-                MenuOptions(); //fix menu options
+                MenuOptions(); 
                 string choice = Console.ReadLine();
 
                 if (choice == "1")
@@ -156,7 +156,7 @@ namespace HospitalManagement
 
         public void ListAppointments()
         {
-            Header("My Patients");
+            Header("Appointments");
             Console.WriteLine($"{"Doctor",-25} | {"Patient",-25} | {"Description",-30}");
             Console.WriteLine(new string('-', 100));
             foreach (var line in File.ReadAllLines("appointments.txt"))
@@ -204,7 +204,7 @@ namespace HospitalManagement
             return "";
         }
 
-
+        //Lists a patient based on user input and database search for matching role
         public void CheckPatient()
         {
             Console.Clear();
@@ -273,6 +273,7 @@ namespace HospitalManagement
             }
         }
 
+        //Lists appointments based on matching user input and class doctor ID
         public void ListPatientAppointment()
         {
             Console.Clear();
@@ -286,7 +287,6 @@ namespace HospitalManagement
                 if (raw.Equals("e"))
                     break;
 
-                // ✅ Validate integer input
                 if (!int.TryParse(raw, out int inputId))
                 {
                     Console.Clear();
@@ -295,7 +295,6 @@ namespace HospitalManagement
                     continue;
                 }
 
-                // ✅ Search patients
                 Console.Clear();
                 Header("Appointments With");
                 Console.WriteLine($"{"Doctor",-25} | {"Patient",-25} | {"Description",-30}");
@@ -385,9 +384,13 @@ namespace HospitalManagement
 
         }
 
-        public override string ToString()
+        public string PrintToString()
         {
-            return $"ID: {ID} | {FName} {LName} | {Email} | {PhoneNumber} | {StreetNo} | {Street}, {City}, {State}";
+            return $"ID: {ID} | {FName} {LName} | {Email} | {PhoneNumber} | {StreetNo} {Street}, {City}, {State}";
+        }
+        public string ToString()
+        {
+            return $"doctor,{ID},{Password},{FName},{LName},{Email},{PhoneNumber},{StreetNo},{Street},{City},{State}";
         }
 
     }

@@ -28,7 +28,7 @@ namespace HospitalManagement
             while (running)
             {
                 Console.Clear();
-                Header("Admin Menu");
+                Header("Admin Menu"); 
                 MenuOptions();
                 Console.Write("Please choose an option: ");
                 string choice = Console.ReadLine();
@@ -98,6 +98,7 @@ namespace HospitalManagement
             }
         }
 
+        //Lists every doctor in the system
         public void ListDoctors()
         {
             Console.Clear();
@@ -128,7 +129,8 @@ namespace HospitalManagement
             }
         }
 
-        public void CheckDoctor() //show error message prompt correctly
+        //Lists a doctor based on user input
+        public void CheckDoctor()
         {
             Console.Clear();
             Header("Doctor Details");
@@ -140,7 +142,6 @@ namespace HospitalManagement
                 if (raw.Equals("e"))
                     break;
 
-                // ✅ Validate integer input
                 if (!int.TryParse(raw, out int inputId))
                 {
                     Console.Clear();
@@ -149,7 +150,6 @@ namespace HospitalManagement
                     continue;
                 }
 
-                // ✅ Search patients
                 bool found = false;
 
                 Console.Clear();
@@ -194,6 +194,7 @@ namespace HospitalManagement
             }
         }
 
+        //Lists all patients in the system
         public void ListPatients()
         {
             Console.Clear();
@@ -223,6 +224,7 @@ namespace HospitalManagement
             }
         }
 
+        //Returns doctor first name
         public string GetDoctorFirstName(int id)
         {
             foreach (var line in File.ReadAllLines("emp.txt"))
@@ -238,6 +240,7 @@ namespace HospitalManagement
             return "";
         }
 
+        //Returns doctor last name
         public string GetDoctorLastName(int id)
         {
             foreach (var line in File.ReadAllLines("emp.txt"))
@@ -252,8 +255,8 @@ namespace HospitalManagement
             }
             return "";
         }
-
-        public void CheckPatient() //show error message prompt correctly
+        //Lists a patient based on user input
+        public void CheckPatient()
         {
             Console.Clear();
             Header("Patient Details");
@@ -265,7 +268,6 @@ namespace HospitalManagement
                 if (raw.Equals("e"))
                     break;
 
-                // ✅ Validate integer input
                 if (!int.TryParse(raw, out int inputId))
                 {
                     Console.Clear();
@@ -274,7 +276,6 @@ namespace HospitalManagement
                     continue;
                 }
 
-                // ✅ Search patients
                 bool found = false;
                 Console.Clear();
                 Header("Patient Details");
@@ -328,6 +329,7 @@ namespace HospitalManagement
             }
         }
 
+        //Adds a doctor by creating a doctor object and adding it to the database as a ToString
         public void AddDoctor()
         {
             Console.Clear();
@@ -365,6 +367,7 @@ namespace HospitalManagement
             File.AppendAllText("emp.txt", newDoctor.ToString() + Environment.NewLine);
         }
 
+        //Adds a patient by creating a patient object and adding it to the database as a ToString
         public void AddPatient()
         {
             Console.Clear();
@@ -420,7 +423,7 @@ namespace HospitalManagement
 
         public int GeneratePatientID()
         {
-            int count = 100;
+            int count = 200;
             foreach (var line in File.ReadAllLines("emp.txt"))
             {
                 string[] contents = line.Split(',');

@@ -8,7 +8,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace HospitalManagement
 {
-    class Program //single database file, role in index 0, separate search method depending on the role
+    class Program //Single database file, user role in index 0, separate search method depending on the role
     {
         static void Main(string[] args)
         {
@@ -24,7 +24,7 @@ namespace HospitalManagement
                     Console.Clear();
                     Header();
 
-                    // Validate ID input
+                    // Validates ID input
                     int id;
                     while (true)
                     {
@@ -33,7 +33,7 @@ namespace HospitalManagement
 
                         if (int.TryParse(rawId, out id))
                         {
-                            break; // valid number, exit inner loop
+                            break;
                         }
                         else
                         {
@@ -46,7 +46,7 @@ namespace HospitalManagement
                     // Password entry
                     Console.Write("Enter password: ");
                     string password = ReadPassword();
-                    users = LoadUsers("emp.txt"); //Had to load this to get most recent changes
+                    users = LoadUsers("emp.txt"); //Initalised right before searching to retrive most recent database
 
                     loggedInUser = users
                         .FirstOrDefault(u => u.ID == id && u.Password == password);
@@ -67,7 +67,7 @@ namespace HospitalManagement
 
         static List<User> LoadUsers(string filepath)
         {
-            // prints each employee details in the employees list on a seperate line
+            // Print each employee details in the employees list on a seperate line
             var users = new List<User>();
             foreach (var line in File.ReadAllLines(filepath))
             {
@@ -77,10 +77,10 @@ namespace HospitalManagement
         }
         static User CreateUserPerLine(string line)
         {
-            // Split the comma seperated string into fields 
+            //Split the comma seperated string into fields 
             string[] contents = line.Split(',');
 
-            // Assign values to respective properties/ members
+            //Assign values to respective properties/ members
             string role = contents[0];
             int id = int.Parse(contents[1]);
             string password = contents[2];

@@ -116,6 +116,7 @@ namespace HospitalManagement
             Console.WriteLine("Phone: " + PhoneNumber);
         }
 
+        //Lists a patients' doctor if Doctor ID parameter exists on Patient object
         public void ListDoctor()
         {
 
@@ -177,7 +178,6 @@ namespace HospitalManagement
                     string patFullName = $"{FName} {LName}";
 
                     Console.WriteLine($"{docFullName,-25} | {patFullName,-25} | {description,-30}");
-                    //Book appointment with patientID or patient name?
                 }
             }
         }
@@ -215,6 +215,7 @@ namespace HospitalManagement
         }
 
 
+        //Creates an appointment based on user prompt or fetches existing Doctor ID parameter from Patient object
         public void BookAppointment()
         {
             if (DoctorID != null)
@@ -267,7 +268,7 @@ namespace HospitalManagement
             }
         }
 
-
+        //Checks if doctor exists to mitigate user error
         public bool DoctorExists(int id)
         {
             foreach (var line in File.ReadAllLines("emp.txt"))
@@ -283,6 +284,7 @@ namespace HospitalManagement
             return false;
         }
 
+        //Implemented to fetch all doctors
         public void ListDoctors()
         {
             foreach (var line in File.ReadAllLines("emp.txt"))
@@ -305,18 +307,22 @@ namespace HospitalManagement
                     string fullName = $"{fname} {lname}";
                     string fullAddress = $"{streetno} {street}, {city}, {state}";
 
-                    Console.WriteLine(doctor.ToString());
+                    Console.WriteLine(doctor.PrintToString());
                 }
             }
         }
 
+        //Initalises the int? doctorID parameter in the database, appending the relevant data
         private void UpdatePatientDoctor(int patientId, int doctorId)
         {
             var lines = File.ReadAllLines("emp.txt").ToList();
 
+            //Iterates through database
             for (int i = 0; i < lines.Count; i++)
             {
                 string[] parts = lines[i].Split(',');
+
+                //Until matching patient ID is found
                 if (parts[0] == "patient" && int.Parse(parts[1]) == patientId)
                 {
                     // If already has doctor ID, replace it
