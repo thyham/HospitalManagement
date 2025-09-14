@@ -1,5 +1,6 @@
 ﻿//Timothy Pham 24842813 
 //31927/32998 Assignment 1: C# Console Application
+//Please open README file before proceeding
 
 namespace HospitalManagement
 {
