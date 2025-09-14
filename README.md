@@ -5,7 +5,7 @@ This is the Hospital Management System developed by Timothy Pham (24842813).
 The instructions below provide information on how to setup and operate the system:
 
 1. Download and extract the ZIP folder provided directly by the developer, or fork the repository link below directly into Visual Studio:
-[Github link]
+https://github.com/thyham/HospitalManagement
 
 2. To access the application and code, open the extracted folder and navigate to:
 24842813HospitalManagement -> HospitalManagement -> Open HospitalManagement.sln
