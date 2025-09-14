@@ -25,5 +25,6 @@ ID: 200,
 Password = password
 
 Login into any of these accounts to utilise the application features.
+Upon creating a new doctor/patient, the system will autogenerate an ID that increments 1 from the default doctor/patient.
 
 For any issues, please contact timothy.y.pham@student.uts.edu.au
